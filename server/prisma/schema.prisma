@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SourceType {
+  NOTE
+  URL
+}
+
+model KnowledgeEntry {
+  id        String     @id @default(uuid())
+  sourceType SourceType
+  title      String?
+  sourceUrl  String?
+  rawContent String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  segments   KnowledgeSegment[]
+
+  @@map("knowledge_entries")
+}
+
+model KnowledgeSegment {
+  id         String   @id @default(uuid())
+  entryId    String
+  content    String
+  chunkIndex Int
+  createdAt  DateTime @default(now())
+  entry      KnowledgeEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, chunkIndex])
+  @@index([entryId])
+  @@map("knowledge_segments")
+}
