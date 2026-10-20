@@ -60,7 +60,7 @@ apiRouter.use((req, res, next) => {
   res.status(415).json({ error: "Content-Type must be application/json." });
 });
 
-apiRouter.post("/knowledge", async (req, res, next) => {
+apiRouter.post("/ingest", async (req, res, next) => {
   try {
     const result = await ingestContent(ingestSchema.parse(req.body));
     logger.info("knowledge.entry.created", {
@@ -71,19 +71,19 @@ apiRouter.post("/knowledge", async (req, res, next) => {
     });
     res
       .status(201)
-      .json({ entry: result.entry, segmentCount: result.segmentCount });
+      .json({ item: result.entry, chunkCount: result.segmentCount });
   } catch (error) {
     next(error);
   }
 });
 
-apiRouter.get("/knowledge", async (_req, res, next) => {
+apiRouter.get("/items", async (_req, res, next) => {
   try {
     const entries = await prisma.knowledgeEntry.findMany({
       orderBy: { createdAt: "desc" },
     });
     res.json({
-      entries: entries.map((entry) => ({
+      items: entries.map((entry) => ({
         ...entry,
         preview: entry.rawContent.slice(0, 180),
       })),
@@ -93,14 +93,14 @@ apiRouter.get("/knowledge", async (_req, res, next) => {
   }
 });
 
-apiRouter.get("/knowledge/:id", async (req, res, next) => {
+apiRouter.get("/items/:id", async (req, res, next) => {
   try {
     const entry = await prisma.knowledgeEntry.findUnique({
       where: entryParamsSchema.parse(req.params),
     });
     if (!entry)
       return res.status(404).json({ error: "Knowledge entry not found." });
-    res.json({ entry });
+    res.json({ item: entry });
   } catch (error) {
     next(error);
   }

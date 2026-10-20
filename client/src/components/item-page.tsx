@@ -17,7 +17,7 @@ export function ItemPage({ id }: { id: string }) {
   useEffect(() => {
     api
       .getEntry(id)
-      .then(({ entry }) => setItem(entry))
+      .then(({ item }) => setItem(item))
       .catch((caught) =>
         setError(
           caught instanceof Error

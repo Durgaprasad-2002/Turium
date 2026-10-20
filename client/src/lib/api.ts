@@ -16,11 +16,11 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  listEntries: () => request<{ entries: Item[] }>("/api/knowledge"),
+  listEntries: () => request<{ items: Item[] }>("/api/items"),
   getEntry: (id: string) =>
-    request<{ entry: ItemDetail }>(`/api/knowledge/${id}`),
+    request<{ item: ItemDetail }>(`/api/items/${id}`),
   ingest: (payload: IngestPayload) =>
-    request<{ entry: Item; segmentCount: number }>("/api/knowledge", {
+    request<{ item: Item; chunkCount: number }>("/api/ingest", {
       method: "POST",
       body: JSON.stringify(payload),
     }),

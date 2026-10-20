@@ -29,7 +29,7 @@ export function IngestForm({ onSaved }: Props) {
             })
           : await api.ingest({ sourceType: "URL", url });
 
-      onSaved(result.entry);
+      onSaved(result.item);
       setTitle("");
       setContent("");
       setUrl("");

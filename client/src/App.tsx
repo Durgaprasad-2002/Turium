@@ -16,7 +16,7 @@ export default function App() {
   useEffect(() => {
     api
       .listEntries()
-      .then(({ entries: savedEntries }) => setEntries(savedEntries))
+      .then(({ items }) => setEntries(items))
       .catch(() => undefined)
       .finally(() => setLoadingEntries(false));
   }, []);
